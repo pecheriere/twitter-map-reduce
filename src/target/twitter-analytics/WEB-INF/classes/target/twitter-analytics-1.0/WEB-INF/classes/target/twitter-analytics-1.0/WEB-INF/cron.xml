@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/tweetFetching</url>
+        <description>Fetch new tweets every hours</description>
+        <schedule>every 20 minutes</schedule>
+    </cron>
+</cronentries>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE web-app PUBLIC
+        "-//Oracle Corporation//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>demo</servlet-name>
+        <servlet-class>main.java.app.Servlets.DemoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>demo</servlet-name>
+        <url-pattern>/demo</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>auth</servlet-name>
+        <servlet-class>main.java.app.Servlets.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>auth</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>twittercallback</servlet-name>
+        <servlet-class>main.java.app.Servlets.TwitterCallback</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>twittercallback</servlet-name>
+        <url-pattern>/auth/callback</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>workerservlet</servlet-name>
+        <servlet-class>main.java.app.Servlets.WorkerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>workerservlet</servlet-name>
+        <url-pattern>/worker</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>tweetFetching</servlet-name>
+        <servlet-class>main.java.app.Servlets.CronJobsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>tweetFetching</servlet-name>
+        <url-pattern>/tweetFetching</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>tweetWordCountServlet</servlet-name>
+        <servlet-class>main.java.app.Servlets.TweetWordCountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>tweetWordCountServlet</servlet-name>
+        <url-pattern>/wordcount</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>associatedHashtagsServlet</servlet-name>
+        <servlet-class>main.java.app.Servlets.AssociatedHashtagsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>associatedHashtagsServlet</servlet-name>
+        <url-pattern>/associated</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>hashtagsLocalisationServlet</servlet-name>
+        <servlet-class>main.java.app.Servlets.HashtagsLocalisationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hashtagsLocalisationServlet</servlet-name>
+        <url-pattern>/localisation</url-pattern>
+    </servlet-mapping>
+
+	<servlet>
+        <servlet-name>popularHashtagsServlet</servlet-name>
+        <servlet-class>main.java.app.Servlets.PopularHashtagsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>popularHashtagsServlet</servlet-name>
+        <url-pattern>/popular</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>mapreduce</servlet-name>
+        <servlet-class>
+            com.google.appengine.tools.mapreduce.MapReduceServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mapreduce</servlet-name>
+        <url-pattern>/mapreduce/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>pipeline</servlet-name>
+        <servlet-class>
+            com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pipeline</servlet-name>
+        <url-pattern>/_ah/pipeline/*</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <filter>
+        <filter-name>ObjectifyFilter</filter-name>
+        <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ObjectifyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>

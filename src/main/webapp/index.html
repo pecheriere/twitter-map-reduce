@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<!--     <meta name="description" content="Responsive Bootstrap App Landing Page">
+    <meta name="keywords" content="Jamjitsu, Bootstrap, App, Mobile, Landing page, Responsive theme, Responsive Template">
+    <meta name="author" content="Bhakti Al Akbar Pasaribu">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ -->
+    <!-- Add title to your website -->
+    <title>Twitter Analytics</title>
+
+    <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="./bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="./bower_components/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="./bower_components/highcharts/themes/grid-light.js"></script>
+
+    <script type="text/javascript" src="//cdn.jsdelivr.net/algoliasearch/latest/algoliasearch.min.js"></script>
+    <script type="text/javascript">
+        var client = new AlgoliaSearch('YN2MPPL3E2', 'f602e43c0a9bbf6fa81097ba5580018f'); // public credentials
+        var wordCountIndex = client.initIndex('wordCount');
+        var associatedHashIndex = client.initIndex('associatedHash');
+        var tweetsIndex = client.initIndex('tweets');
+        var popularHashIndex = client.initIndex('popularHash');
+    </script>
+
+<!--     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> -->
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            function getUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&');
+                for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                        return sParameterName[1];
+                    }
+                }
+            }
+            // var userID = getUrlParameter('userID');
+
+            $("#error, #stats div, #search, .page-header").hide();
+
+            // if (!userID) {
+            //     $("#stats div").hide();
+            //     $("#error").show();
+            //     return ;
+            // }
+            // console.log("userID:", userID);
+
+            var query = "twitter";
+            var wordCount = [];
+            var tweets = [];
+            var associatedHash = [];
+            var popularHash = [];
+
+            function wordCountCallback(success, content) {
+                wordCount = [];
+                if (success) {
+                    for (var i = 0; i < content.hits.length; ++i) {
+                        // console.log(content.hits[i]);
+                        wordCount.push([content.hits[i].word, content.hits[i].count]);
+                    }
+                }
+                loadWordCountCharts();
+            }
+            function associatedHashCallback(success, content) {
+                associatedHash = [];
+                if (success) {
+                    for (var i = 0; i < content.hits.length; ++i) {
+                        associatedHash.push([content.hits[i].associated, content.hits[i].count]);
+                    }
+                }
+                associatedHashCharts();
+            }
+            function popularHashCallback(success, content) {
+                popularHash = [];
+                if (success) {
+                    for (var i = 0; i < content.hits.length; ++i) {
+                        popularHash.push([content.hits[i].hash, content.hits[i].count]);
+                    }
+                }
+                popularHashCharts();
+            }
+            function tweetsCallback(success, content) {
+                tweets = [];
+                if (success) {
+                    for (var i = 0; i < content.hits.length; ++i) {
+                        // console.log(content.hits[i]);
+                        var hit = content.hits[i];
+                        var name = "No name";
+                        var picture = null;
+                        if (hit.user) {
+                            name = hit.user.name,
+                            picture = hit.user.profile_image_url
+                        }
+                        tweets.push({
+                            name: name,
+                            picture: picture,
+                            text: hit.text
+                        });
+                    }
+                }
+                displayTweets();
+            }
+
+            function userSearch() {
+                wordCount = [];
+                wordCountIndex.search(query, wordCountCallback, { hitsPerPage: 10 });
+                tweetsIndex.search(query, tweetsCallback, { hitsPerPage: 10 });
+                associatedHashIndex.search(query, associatedHashCallback, { hitsPerPage: 10 });
+                popularHashIndex.search(query, popularHashCallback, { hitsPerPage: 10 });
+            }
+            userSearch();
+
+            $("#search").keyup(function() {
+                query = $(this).val();
+                if (!query || query == "") {
+                    query = "twitter";
+                }
+                userSearch();
+            });
+            function displayTweets() {
+                $("#tweets, #tweets-content, .page-header").show();
+                var content = $("#tweets-content");
+                content.empty();
+                for (var i = 0; i < tweets.length; ++i) {
+                    var tweet = tweets[i];
+                    var elem = $("<div/>", {
+                        class: "tweet col-md-12"
+                    });
+                    if (tweet.picture) {
+                        var img = $("<img/>", {
+                            src: tweet.picture,
+                        });
+                        elem.append(img);
+                    }
+                    var name = $("<h3>", {
+                        html: "@" + tweet.name + "<br/>",
+                    });
+                    elem.append(name);
+                    var text = $("<p/>", {
+                        text: tweet.text,
+                    })
+                    elem.append(text);
+                    content.append(elem);
+                }
+            }
+
+            function loadWordCountCharts() {
+                $("#loading").hide();
+                $("#containerWordCount, #search").show();
+
+                $('#containerWordCount').highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: 1,//null,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Word Count'
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{point.y}</b> {series.name}'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Words',
+                        data: wordCount
+                    }]
+                });
+            }
+
+            function associatedHashCharts() {
+                $("#loading").hide();
+                $("#containerAssociatedHash, #search").show();
+
+                $('#containerAssociatedHash').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Associated Hashtag'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        labels: {
+                            rotation: -45,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Associated Hashtag'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{point.y} hashtags</b>'
+                    },
+                    series: [{
+                        name: 'Population',
+                        data: associatedHash,
+                        dataLabels: {
+                            enabled: true,
+                            rotation: -90,
+                            color: '#FFFFFF',
+                            align: 'right',
+                            x: 4,
+                            y: 10,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif',
+                                textShadow: '0 0 3px black'
+                            }
+                        }
+                    }]
+                });
+            }
+
+            function popularHashCharts() {
+                $("#loading").hide();
+                $("#containerPopularHash, #search, #wordCloud").show();
+
+                $('#containerPopularHash').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Popular Hashtag'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        labels: {
+                            rotation: -45,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Popular Hashtag'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        pointFormat: 'Hashtag: <b>{point.y}</b>'
+                    },
+                    series: [{
+                        name: 'Population',
+                        data: popularHash,
+                        dataLabels: {
+                            enabled: true,
+                            rotation: -90,
+                            color: '#FFFFFF',
+                            align: 'right',
+                            x: 4,
+                            y: 10,
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif',
+                                textShadow: '0 0 3px black'
+                            }
+                        }
+                    }]
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="wrapper-yolo">
+        <header>
+            <div class="website-size">
+                <a href="/"><h1>Twitter Analytics</h1></a>
+            </div>
+        </header>
+        <div class="content-yolo website-size">
+
+            <img src="./assets/loader.gif" alt="loading" id="loading"/>
+            <p class="col-md-12" id="error">Wrong user id.</p>
+            <input type="test" value="" id="search">
+            <div class="row" id="stats">
+                <div class="col-md-4" id="containerWordCount"></div>
+                <div class="col-md-4" id="tweets">
+                    <h2 class="page-header">Tweets</h2>
+                    <div id="tweets-content"></div>
+                </div>
+                <div class="col-md-4" id="containerAssociatedHash"></div>
+                <div class="col-md-12" id="containerPopularHash"></div>
+                <div class="col-md-12" style="clear: both;"></div>
+            </div>
+        </div>
+        <footer>© 2014 Twitter Analytics</footer>
+    </div>
+</body>
+</html>

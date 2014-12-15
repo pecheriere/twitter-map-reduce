@@ -1,0 +1,133 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+body {
+    margin: 0 auto;
+    padding: 0 30px;
+    background: url(../assets/grey.png);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body h1 {
+
+}
+
+header {
+    background-color: #4C6476;
+    height: 90px;
+    margin-bottom: 75px;
+    padding-top: 1px;
+    padding-left: 15px;
+}
+header h1 {
+    color: #FFF;
+}
+a {
+    text-decoration: none !important;
+}
+footer {
+    background-color: #4C6476;
+    text-align: center;
+    color: #FFF;
+    height: 50px;
+    padding-top: 15px;
+    margin-top: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+#stats {
+    width: 100%;
+}
+#stats > .col-md-4,
+#stats > .col-md-12 {
+    margin-top: 50px;
+}
+
+#loading {
+    margin: 0 auto;
+    width: 64px;
+    height: 64px;
+    display: block;
+}
+
+#wordCloud {
+    height: 400px;
+}
+
+#wrapper-yolo {
+    min-height:100%;
+    position:relative;
+}
+.content-yolo {
+    padding-bottom: 80px;
+}
+
+.page-header {
+    margin: 0 0 20px 0;
+}
+
+.website-size {
+    max-width: 1300px;
+    min-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+#search {
+    margin: 0 auto 10px auto;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #67A4E8;
+    font-size: 40px;
+    text-align: center;
+}
+#tweets-content {
+    display: block;
+    height: 337px;
+    overflow: scroll;
+}
+.tweet {
+    background-color: #FFF;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+    color: #666;
+}
+.tweet h3 {
+    margin-top: 0;
+}
+.tweet img {
+    float: left;
+    margin-right: 10px;
+}
+
+
+.connect {
+    margin: 0 auto 100px auto !important;
+    width: 300px;
+    display: block;
+    position: relative;
+    background-color: #55acee;
+    border-color: #4A9EE7;
+}
+.connect:hover {
+    background-color: #4B9DDB;
+    border-color: #4A94D5;
+}
+
+.see-result {
+    margin: 0 auto;
+    display: block;
+    width: 176px;
+    font-size: 26px;
+    font-weight: bold;
+}
